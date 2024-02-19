@@ -1,8 +1,13 @@
 # models.py
+import os
+import sys
 from sqlalchemy import create_engine, Column, Integer, String, Table, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy import func
 
+sys.path.append(os.getcwd())
+
+# Create the database engine
 engine = create_engine('sqlite:///movie_ratings.db')
 Base = declarative_base()
 
