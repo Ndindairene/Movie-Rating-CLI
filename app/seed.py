@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Base, Movie, User
+from models import Base, Movie, User, Rating
 from faker import Faker
 
 DATABASE_URI = 'sqlite:///movie_ratings.db'
@@ -37,12 +37,18 @@ def generate_fake_data(num_movies=10, num_users=5):
     #Generate fake ratings
     for movie in session.query(Movie).all():
         for _ in range(10):
-            rating = rating(
+            rating = Rating(
                 score=fake.random_int(1, 5),
                 user_id=fake.random_int(1, num_users),
                 movie_id=movie.id
             )
             session.add(rating)
+
+    session.commit()
+
+    #joining tables
+    for user in session.query(User).all():
+        user.movies = session.query(Movie).filter(Movie.users.contains(user)).all()
 
     session.commit()
 

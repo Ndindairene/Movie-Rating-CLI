@@ -24,20 +24,23 @@ def upgrade():
     sa.Column('director', sa.String(), nullable=True),
     sa.Column('genre', sa.String(), nullable=True),
     sa.Column('release_year', sa.Integer(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    if_not_exists=True  # Use if_not_exists for individual columns
     )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(), nullable=False),
     sa.Column('age', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('username')
+    sa.UniqueConstraint('username'),
+    if_not_exists=True  # Use if_not_exists for individual columns
     )
     op.create_table('movie_user_association',
     sa.Column('movie_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['movie_id'], ['movies.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], )
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    if_not_exists=True  # Use if_not_exists for individual columns
     )
     op.create_table('ratings',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -46,7 +49,8 @@ def upgrade():
     sa.Column('movie_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['movie_id'], ['movies.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    if_not_exists=True  # Use if_not_exists for individual columns
     )
     # ### end Alembic commands ###
 
