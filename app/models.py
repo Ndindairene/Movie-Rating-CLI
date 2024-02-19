@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Table, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy import func
 
-engine = create_engine('sqlite:///irene.db')
+engine = create_engine('sqlite:///movie_ratings.db')
 Base = declarative_base()
 
 # Create tables in the database
