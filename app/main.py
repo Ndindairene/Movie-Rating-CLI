@@ -2,11 +2,10 @@ import os
 import sys
 from sqlalchemy.orm import sessionmaker
 from models import Movie, User, Rating, engine
-
-sys.path.append(os.getcwd())
-
 from tabulate import tabulate
 from colorama import Fore, Style
+
+sys.path.append(os.getcwd())
 
 # CLI functionality
 def view_movies(session):
