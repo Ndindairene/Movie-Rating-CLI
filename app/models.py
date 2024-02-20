@@ -1,9 +1,7 @@
-# models.py
 import os
 import sys
 from sqlalchemy import create_engine, Column, Integer, String, Table, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import func
 
 sys.path.append(os.getcwd())
 
@@ -54,3 +52,4 @@ class Rating(Base):
 
     movie_id = Column(Integer, ForeignKey('movies.id'))
     movie = relationship('Movie', back_populates='ratings')
+
