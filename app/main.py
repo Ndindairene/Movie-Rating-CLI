@@ -1,9 +1,12 @@
 import os
 import sys
+from sqlalchemy import desc
+from sqlalchemy import func  # Add this line
 from sqlalchemy.orm import sessionmaker
 from models import Movie, User, Rating, engine
 from tabulate import tabulate
 from colorama import Fore, Style
+
 
 sys.path.append(os.getcwd())
 
@@ -97,6 +100,23 @@ def update_movie(session, movie_id, new_title, new_director, new_genre, new_rele
     else:
         print(f"{Fore.RED}Movie not found.{Style.RESET_ALL}")
 
+def top_rated_movies(session, num_movies=5):
+    # Query movies and their average ratings
+    query = (
+        session.query(Movie, func.avg(Rating.score).label('average_rating'))
+        .join(Rating, Movie.id == Rating.movie_id)
+        .group_by(Movie.id)
+        .order_by(desc('average_rating'))
+        .limit(num_movies)
+    )
+    top_movies = query.all()
+
+    if top_movies:
+        print(f"{Fore.YELLOW}Top {num_movies} Rated Movies:{Style.RESET_ALL}")
+        for movie, avg_rating in top_movies:
+            print(f"{Fore.GREEN}- {movie.title}:{Style.RESET_ALL} {avg_rating:.2f}")
+    else:
+        print(f"{Fore.RED}No movies found.{Style.RESET_ALL}")
 def main():
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -115,7 +135,8 @@ def main():
         print("8. Create Movie")
         print("9. Delete Movie")
         print("10. Update Movie Details")
-        print("11. Exit")
+        print("11. Top Rated Movies")
+        print("12. Exit")
         choice = input(f"{Fore.YELLOW}Enter your choice: {Style.RESET_ALL}")
 
         if choice == '1':
@@ -159,6 +180,10 @@ def main():
             new_release_year = int(input(f"{Fore.YELLOW}Enter new release year: {Style.RESET_ALL}"))
             update_movie(session, movie_id, new_title, new_director, new_genre, new_release_year)
         elif choice == '11':
+            num_movies = int(input(f"{Fore.YELLOW}Enter the number of top-rated movies to display: {Style.RESET_ALL}"))
+            top_rated_movies(session, num_movies)
+
+        elif choice == '12':
             print(f"{Fore.CYAN}Goodbye!{Style.RESET_ALL}")
             break
         else:
